@@ -108,7 +108,11 @@ pipeline {
                     sh 'docker image prune -af'
                     
                     // Delete the ECR repository (this will remove all images in the repository)
-                    sh "aws ecr delete-repository --repository-name ${APP_REPO_NAME} --region ${AWS_REGION} --force"
+                    sh """
+                        aws ecr delete-repository --repository-name ${APP_REPO_NAME} --region ${AWS_REGION} --force
+                        aws ecr delete-repository --repository-name ${APP_REPO_NAME_1} --region ${AWS_REGION} --force
+                    """
+                }
                 }
             }
         }
@@ -120,7 +124,10 @@ pipeline {
         }
         failure {
             echo 'Delete the Image Repository on ECR due to the Failure'
-            sh "aws ecr delete-repository --repository-name ${APP_REPO_NAME} --region ${AWS_REGION} --force"
+            sh """
+                aws ecr delete-repository --repository-name ${APP_REPO_NAME} --region ${AWS_REGION} --force
+                aws ecr delete-repository --repository-name ${APP_REPO_NAME_1} --region ${AWS_REGION} --force
+             """
         }
     }
 }
